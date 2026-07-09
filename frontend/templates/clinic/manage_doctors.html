@@ -1,0 +1,414 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block extra_css %}
+<style>
+  /* ═══ DOCTOR DIRECTORY — Modern Card Grid ═══ */
+  .doc-page-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* ─── Page Header ─── */
+  .doc-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .doc-page-header h1 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--gray-900);
+    margin: 0;
+  }
+  .doc-page-header .subtitle {
+    font-size: 0.9rem;
+    color: var(--gray-500);
+    margin-top: 4px;
+  }
+  .doc-count-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, var(--primary-50), var(--primary-100));
+    color: var(--primary-700);
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 6px 16px;
+    border-radius: var(--border-radius-full);
+    border: 1px solid var(--primary-200);
+  }
+
+  /* ─── Filter Bar ─── */
+  .doc-filters {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+  .doc-filter-btn {
+    padding: 8px 18px;
+    border-radius: var(--border-radius-full);
+    font-size: 0.82rem;
+    font-weight: 600;
+    border: 1px solid var(--border-color);
+    background: var(--bg-primary);
+    color: var(--gray-600);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: inherit;
+  }
+  .doc-filter-btn:hover {
+    border-color: var(--primary-300);
+    color: var(--primary-600);
+  }
+  .doc-filter-btn.active {
+    background: var(--primary-600);
+    color: white;
+    border-color: var(--primary-600);
+  }
+
+  /* ─── Doctor Card Grid ─── */
+  .doc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 24px;
+  }
+
+  /* ─── Doctor Card ─── */
+  .doctor-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    transition: all var(--transition-normal);
+    position: relative;
+  }
+  .doctor-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--primary-200);
+  }
+
+  /* Card Top — Avatar + Info */
+  .doc-card-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 24px 24px 16px;
+  }
+  .doc-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, var(--primary-400), var(--primary-600));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  .doc-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .doc-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .doc-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .doc-spec {
+    font-size: 0.85rem;
+    color: var(--primary-600);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .doc-meta {
+    font-size: 0.78rem;
+    color: var(--gray-400);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .doc-meta i {
+    font-size: 0.7rem;
+    margin-right: 3px;
+  }
+
+  /* Card Middle — Stats */
+  .doc-card-stats {
+    display: flex;
+    gap: 0;
+    padding: 0 24px 16px;
+  }
+  .doc-stat {
+    flex: 1;
+    text-align: center;
+    position: relative;
+  }
+  .doc-stat:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 28px;
+    width: 1px;
+    background: var(--border-color);
+  }
+  .doc-stat-value {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--gray-900);
+  }
+  .doc-stat-label {
+    font-size: 0.7rem;
+    color: var(--gray-400);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  /* Rating Stars */
+  .doc-rating {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 24px 16px;
+  }
+  .doc-stars {
+    display: flex;
+    gap: 2px;
+  }
+  .doc-stars i {
+    font-size: 0.75rem;
+    color: var(--gray-300);
+  }
+  .doc-stars i.filled {
+    color: #f59e0b;
+  }
+  .doc-rating-text {
+    font-size: 0.78rem;
+    color: var(--gray-500);
+    font-weight: 600;
+  }
+
+  /* Card Bottom — Actions */
+  .doc-card-actions {
+    display: flex;
+    gap: 8px;
+    padding: 0 24px 24px;
+  }
+  .doc-card-actions a,
+  .doc-card-actions button {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 12px;
+    border-radius: var(--border-radius);
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all var(--transition-fast);
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+  }
+  .doc-btn-primary {
+    background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+    color: white;
+  }
+  .doc-btn-primary:hover {
+    background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+    box-shadow: 0 4px 12px rgba(20, 184, 166, 0.3);
+  }
+  .doc-btn-secondary {
+    background: var(--bg-tertiary);
+    color: var(--gray-700);
+    border: 1px solid var(--border-color);
+  }
+  .doc-btn-secondary:hover {
+    background: var(--primary-50);
+    color: var(--primary-600);
+    border-color: var(--primary-200);
+  }
+
+  /* ─── Specialization Colors ─── */
+  .spec-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: var(--border-radius-full);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .spec-gynaecology { background: #fdf2f8; color: #be185d; }
+  .spec-pediatrics { background: #eff6ff; color: #1d4ed8; }
+  .spec-cardiology { background: #fef2f2; color: #dc2626; }
+  .spec-dermatology { background: #f5f3ff; color: #7c3aed; }
+  .spec-orthopedics { background: #fffbeb; color: #d97706; }
+  .spec-general { background: var(--primary-50); color: var(--primary-700); }
+
+  /* ─── Empty State ─── */
+  .doc-empty {
+    text-align: center;
+    padding: 80px 20px;
+    grid-column: 1 / -1;
+  }
+  .doc-empty-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    background: var(--primary-50);
+    color: var(--primary-400);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 2rem;
+  }
+  .doc-empty h4 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 8px;
+  }
+  .doc-empty p {
+    font-size: 0.88rem;
+    color: var(--gray-500);
+  }
+
+  /* ─── Responsive ─── */
+  @media (max-width: 768px) {
+    .doc-grid {
+      grid-template-columns: 1fr;
+    }
+    .doc-page-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block page_title %}Our Doctors{% endblock %}
+{% block page_subtitle %}Meet our team of experienced healthcare professionals{% endblock %}
+
+{% block content %}
+<div class="doc-page-wrap">
+
+  <!-- ═══ Page Header ═══ -->
+  <div class="doc-page-header animate-fade-in-up">
+    <div>
+      <h1>Our Doctors</h1>
+      <div class="subtitle">Meet our team of experienced healthcare professionals</div>
+    </div>
+    <div class="doc-count-badge">
+      <i class="fas fa-user-doctor"></i>
+      {{ doctors|length }} doctor{{ doctors|length|pluralize }}
+    </div>
+  </div>
+
+  <!-- ═══ Doctor Grid ═══ -->
+  <div class="doc-grid">
+    {% for doctor in doctors %}
+    <div class="doctor-card animate-fade-in-up" style="animation-delay: {{ forloop.counter0 }}00ms;">
+      
+      <!-- Card Top -->
+      <div class="doc-card-top">
+        <div class="doc-avatar">
+          {% if doctor.profile_photo %}
+            <img src="{{ doctor.profile_photo.url }}" alt="Dr. {{ doctor.get_full_name }}">
+          {% else %}
+            {{ doctor.username|slice:":1"|upper }}
+          {% endif %}
+        </div>
+        <div class="doc-info">
+          <div class="doc-name">Dr. {{ doctor.get_full_name|default:doctor.username }}</div>
+          <div class="doc-spec">{{ doctor.specialization|default:"General Practice" }}</div>
+          <div class="doc-meta">
+            <span><i class="fas fa-envelope"></i> {{ doctor.email|default:"No email" }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Stats -->
+      <div class="doc-card-stats">
+        <div class="doc-stat">
+          <div class="doc-stat-value">PKR {{ doctor.consultation_fee|default:"—" }}</div>
+          <div class="doc-stat-label">Fee</div>
+        </div>
+        <div class="doc-stat">
+          <div class="doc-stat-value">
+            {% if doctor.avg_rating %}{{ doctor.avg_rating|floatformat:1 }}{% else %}—{% endif %}
+          </div>
+          <div class="doc-stat-label">Rating</div>
+        </div>
+        <div class="doc-stat">
+          <div class="doc-stat-value">{{ doctor.review_count|default:"0" }}</div>
+          <div class="doc-stat-label">Reviews</div>
+        </div>
+      </div>
+
+      <!-- Rating Stars -->
+      {% if doctor.avg_rating %}
+      <div class="doc-rating">
+        <div class="doc-stars">
+          {% for i in "12345" %}
+            {% if doctor.avg_rating >= forloop.counter %}
+              <i class="fas fa-star filled"></i>
+            {% elif doctor.avg_rating >= forloop.counter|add:"-0.5" %}
+              <i class="fas fa-star-half-alt filled"></i>
+            {% else %}
+              <i class="far fa-star"></i>
+            {% endif %}
+          {% endfor %}
+        </div>
+        <span class="doc-rating-text">{{ doctor.avg_rating|floatformat:1 }} out of 5</span>
+      </div>
+      {% endif %}
+
+      <!-- Card Actions -->
+      <div class="doc-card-actions">
+        <a href="{% url 'clinic:doctor_schedule' doctor.id %}" class="doc-btn-secondary">
+          <i class="fas fa-calendar"></i> Schedule
+        </a>
+        <a href="{% url 'clinic:doctor_reviews' doctor.id %}" class="doc-btn-secondary">
+          <i class="fas fa-star"></i> Reviews
+        </a>
+        <a href="{% url 'admin:accounts_user_change' doctor.id %}" class="doc-btn-primary">
+          <i class="fas fa-edit"></i> Edit
+        </a>
+      </div>
+
+    </div>
+    {% empty %}
+    <div class="doc-empty animate-fade-in-up">
+      <div class="doc-empty-icon">
+        <i class="fas fa-user-doctor"></i>
+      </div>
+      <h4>No doctors found</h4>
+      <p>Add doctors through the <a href="{% url 'admin:accounts_user_add' %}" style="color: var(--primary-600); font-weight: 600;">admin panel</a></p>
+    </div>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}

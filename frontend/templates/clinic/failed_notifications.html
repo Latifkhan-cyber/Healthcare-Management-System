@@ -1,0 +1,71 @@
+{% extends 'base/base.html' %}
+{% block page_title %}Failed Notifications{% endblock %}
+{% block page_subtitle %}Notifications with delivery errors{% endblock %}
+
+{% block content %}
+<div class="data-card animate-fade-in-up">
+    <div class="data-card-header">
+        <h3>Failed Notifications ({{ notifications|length }})</h3>
+        <a href="{% url 'clinic:send_bulk_notification' %}" class="btn-primary btn-sm" style="text-decoration: none;">
+            <i class="fas fa-paper-plane"></i> Send Bulk
+        </a>
+    </div>
+
+    {% for notif in notifications %}
+    <div class="notification-item" style="border-left: 3px solid #ef4444;">
+        <div class="notif-left">
+            <div class="notif-icon" style="background: #fef2f2; color: #ef4444;">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="notif-content">
+                <div class="title">{{ notif.title }}</div>
+                <div class="message">{{ notif.message|truncatewords:20 }}</div>
+                <div class="time">
+                    <i class="far fa-clock" style="margin-right: 3px;"></i>{{ notif.created_at|timesince }} ago
+                    <span style="margin-left: 8px; font-size: 0.75rem;">
+                        <strong>To:</strong> {{ notif.recipient.get_full_name|default:notif.recipient.username }}
+                        ({{ notif.recipient.email|default:"no email" }} / {{ notif.recipient.phone|default:"no phone" }})
+                    </span>
+                    <div style="margin-top: 4px; font-size: 0.75rem; color: #ef4444;">
+                        <strong>Error:</strong> {{ notif.delivery_error|truncatewords:15 }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="display: flex; gap: 8px; align-items: center;">
+            <form method="post" action="{% url 'clinic:resend_notification' notif.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-primary btn-sm" style="border: none; cursor: pointer;">
+                    <i class="fas fa-redo"></i> Resend
+                </button>
+            </form>
+        </div>
+    </div>
+    {% empty %}
+    <div class="empty-state">
+        <div class="empty-icon"><i class="fas fa-check-circle" style="font-size: 2.5rem;"></i></div>
+        <h4>No failed notifications</h4>
+        <p>All notifications delivered successfully</p>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Pagination -->
+{% if page_obj.has_other_pages %}
+<div class="pagination" style="margin-top: 16px;">
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="page-link">&laquo; Previous</a>
+    {% endif %}
+    {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+            <span class="page-link active">{{ num }}</span>
+        {% else %}
+            <a href="?page={{ num }}" class="page-link">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="page-link">Next &raquo;</a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

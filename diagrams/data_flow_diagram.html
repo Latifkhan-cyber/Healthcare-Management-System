@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Flow Diagram - Healthcare Management System</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0f172a; font-family: 'Segoe UI', system-ui, sans-serif; padding: 40px; min-height: 100vh; }
+  .container { max-width: 1200px; margin: 0 auto; }
+  h1 { color: #e2e8f0; text-align: center; font-size: 1.8rem; margin-bottom: 8px; }
+  .subtitle { color: #64748b; text-align: center; font-size: 0.9rem; margin-bottom: 20px; }
+  .diagram-container { background: #1e293b; border-radius: 16px; padding: 30px; border: 1px solid #334155; margin-bottom: 30px; }
+  svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
+  .level-label { color: #94a3b8; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Data Flow Diagrams</h1>
+  <p class="subtitle">Healthcare Management System — Three Levels</p>
+
+  <!-- Level 0: Context Diagram -->
+  <div class="diagram-container">
+    <div class="level-label">Level 0 — Context Diagram</div>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400" width="900" height="400">
+      <rect width="900" height="400" fill="#0f172a" rx="12"/>
+      
+      <!-- External Entities -->
+      <rect x="50" y="80" width="120" height="60" rx="8" fill="rgba(34,211,238,0.15)" stroke="#22d3ee" stroke-width="2"/>
+      <text x="110" y="115" fill="#22d3ee" font-size="12" text-anchor="middle" font-weight="600">Patient</text>
+      
+      <rect x="50" y="260" width="120" height="60" rx="8" fill="rgba(52,211,153,0.15)" stroke="#34d399" stroke-width="2"/>
+      <text x="110" y="295" fill="#34d399" font-size="12" text-anchor="middle" font-weight="600">Doctor</text>
+      
+      <rect x="730" y="80" width="120" height="60" rx="8" fill="rgba(251,191,36,0.15)" stroke="#fbbf24" stroke-width="2"/>
+      <text x="790" y="115" fill="#fbbf24" font-size="12" text-anchor="middle" font-weight="600">Receptionist</text>
+      
+      <rect x="730" y="260" width="120" height="60" rx="8" fill="rgba(251,113,133,0.15)" stroke="#fb7185" stroke-width="2"/>
+      <text x="790" y="295" fill="#fb7185" font-size="12" text-anchor="middle" font-weight="600">Admin</text>
+      
+      <!-- Central System -->
+      <rect x="300" y="100" width="300" height="200" rx="16" fill="rgba(99,102,241,0.15)" stroke="#818cf8" stroke-width="2.5"/>
+      <text x="450" y="170" fill="#e2e8f0" font-size="14" text-anchor="middle" font-weight="700">Healthcare</text>
+      <text x="450" y="190" fill="#e2e8f0" font-size="14" text-anchor="middle" font-weight="700">Management</text>
+      <text x="450" y="210" fill="#e2e8f0" font-size="14" text-anchor="middle" font-weight="700">System</text>
+      <text x="450" y="250" fill="#818cf8" font-size="10" text-anchor="middle">MySQL Database</text>
+      <rect x="340" y="260" width="220" height="28" rx="6" fill="rgba(76,29,149,0.3)" stroke="#a78bfa" stroke-width="1"/>
+      
+      <!-- Data Flows -->
+      <!-- Patient -> System -->
+      <line x1="170" y1="110" x2="300" y2="150" stroke="#22d3ee" stroke-width="2" marker-end="url(#arrowCyan)"/>
+      <text x="210" y="120" fill="#94a3b8" font-size="8">Registration</text>
+      <text x="210" y="132" fill="#94a3b8" font-size="8">Appointment Request</text>
+      <text x="210" y="144" fill="#94a3b8" font-size="8">Payment Proof</text>
+      
+      <!-- System -> Patient -->
+      <line x1="300" y1="180" x2="170" y2="130" stroke="#22d3ee" stroke-width="2" marker-end="url(#arrowCyan)" stroke-dasharray="6,3"/>
+      <text x="210" y="165" fill="#94a3b8" font-size="8">Confirmation</text>
+      <text x="210" y="177" fill="#94a3b8" font-size="8">Notifications</text>
+      
+      <!-- Doctor -> System -->
+      <line x1="170" y1="290" x2="300" y2="250" stroke="#34d399" stroke-width="2" marker-end="url(#arrowGreen)"/>
+      <text x="195" y="265" fill="#94a3b8" font-size="8">Mark Seen</text>
+      
+      <!-- System -> Doctor -->
+      <line x1="300" y1="220" x2="170" y2="270" stroke="#34d399" stroke-width="2" marker-end="url(#arrowGreen)" stroke-dasharray="6,3"/>
+      <text x="195" y="240" fill="#94a3b8" font-size="8">Schedule</text>
+      <text x="195" y="252" fill="#94a3b8" font-size="8">Queue Info</text>
+      
+      <!-- Receptionist -> System -->
+      <line x1="730" y1="110" x2="600" y2="150" stroke="#fbbf24" stroke-width="2" marker-end="url(#arrowAmber)"/>
+      <text x="680" y="120" fill="#94a3b8" font-size="8">Patient Data</text>
+      <text x="680" y="132" fill="#94a3b8" font-size="8">Consultation Notes</text>
+      
+      <!-- System -> Receptionist -->
+      <line x1="600" y1="180" x2="730" y2="130" stroke="#fbbf24" stroke-width="2" marker-end="url(#arrowAmber)" stroke-dasharray="6,3"/>
+      <text x="680" y="160" fill="#94a3b8" font-size="8">Queue Display</text>
+      
+      <!-- Admin -> System -->
+      <line x1="730" y1="290" x2="600" y2="250" stroke="#fb7185" stroke-width="2" marker-end="url(#arrowRose)"/>
+      <text x="680" y="265" fill="#94a3b8" font-size="8">Management Commands</text>
+      
+      <!-- System -> Admin -->
+      <line x1="600" y1="220" x2="730" y2="270" stroke="#fb7185" stroke-width="2" marker-end="url(#arrowRose)" stroke-dasharray="6,3"/>
+      <text x="680" y="240" fill="#94a3b8" font-size="8">Analytics</text>
+      <text x="680" y="252" fill="#94a3b8" font-size="8">Reports</text>
+      
+      <!-- Arrow markers -->
+      <defs>
+        <marker id="arrowCyan" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#22d3ee"/></marker>
+        <marker id="arrowGreen" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#34d399"/></marker>
+        <marker id="arrowAmber" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#fbbf24"/></marker>
+        <marker id="arrowRose" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#fb7185"/></marker>
+      </defs>
+    </svg>
+  </div>
+
+  <!-- Level 1: DFD -->
+  <div class="diagram-container">
+    <div class="level-label">Level 1 — Data Flow Diagram</div>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 650" width="1000" height="650">
+      <rect width="1000" height="650" fill="#0f172a" rx="12"/>
+      
+      <!-- External Entities -->
+      <rect x="30" y="50" width="100" height="50" rx="6" fill="rgba(34,211,238,0.15)" stroke="#22d3ee" stroke-width="1.5"/>
+      <text x="80" y="80" fill="#22d3ee" font-size="10" text-anchor="middle" font-weight="600">Patient</text>
+      
+      <rect x="30" y="550" width="100" height="50" rx="6" fill="rgba(52,211,153,0.15)" stroke="#34d399" stroke-width="1.5"/>
+      <text x="80" y="580" fill="#34d399" font-size="10" text-anchor="middle" font-weight="600">Doctor</text>
+      
+      <rect x="870" y="50" width="100" height="50" rx="6" fill="rgba(251,191,36,0.15)" stroke="#fbbf24" stroke-width="1.5"/>
+      <text x="920" y="80" fill="#fbbf24" font-size="10" text-anchor="middle" font-weight="600">Receptionist</text>
+      
+      <rect x="870" y="550" width="100" height="50" rx="6" fill="rgba(251,113,133,0.15)" stroke="#fb7185" stroke-width="1.5"/>
+      <text x="920" y="580" fill="#fb7185" font-size="10" text-anchor="middle" font-weight="600">Admin</text>
+      
+      <!-- Processes -->
+      <rect x="200" y="40" width="160" height="70" rx="8" fill="rgba(99,102,241,0.2)" stroke="#818cf8" stroke-width="1.5"/>
+      <text x="280" y="65" fill="#e2e8f0" font-size="10" text-anchor="middle" font-weight="600">P1</text>
+      <text x="280" y="82" fill="#94a3b8" font-size="9" text-anchor="middle">Authentication</text>
+      <text x="280" y="94" fill="#94a3b8" font-size="9" text-anchor="middle">&amp; User Mgmt</text>
+      
+      <rect x="420" y="40" width="160" height="70" rx="8" fill="rgba(99,102,241,0.2)" stroke="#818cf8" stroke-width="1.5"/>
+      <text x="500" y="65" fill="#e2e8f0" font-size="10" text-anchor="middle" font-weight="600">P2</text>
+      <text x="500" y="82" fill="#94a3b8" font-size="9" text-anchor="middle">Appointment</text>
+      <text x="500" y="94" fill="#94a3b8" font-size="9" text-anchor="middle">Booking</text>
+      
+      <rect x="640" y="40" width="160" height="70" rx="8" fill="rgba(99,102,241,0.2)" stroke="#818cf8" stroke-width="1.5"/>
+      <text x="720" y="65" fill="#e2e8f0" font-size="10" text-anchor="middle" font-weight="600">P3</text>
+      <text x="720" y="82" fill="#94a3b8" font-size="9" text-anchor="middle">Payment</text>
+      <text x="720" y="94" fill="#94a3b8" font-size="9" text-anchor="middle">Processing</text>
+      
+      <rect x="200" y="180" width="160" height="70" rx="8" fill="rgba(99,102,241,0.2)" stroke="#818cf8" stroke-width="1.5"/>
+      <text x="280" y="205" fill="#e2e8f0" font-size="10" text-anchor="middle" font-weight="600">P4</text>
+      <text x="280" y="222" fill="#94a3b8" font-size="9" text-anchor="middle">Queue</text>
+      <text x="280" y="234" fill="#94a3b8" font-size="9" text-anchor="middle">Management</text>
+      
+      <rect x="420" y="180" width="160" height="70" rx="8" fill="rgba(99,102,241,0.2)" stroke="#818cf8" stroke-width="1.5"/>
+      <text x="500" y="205" fill="#e2e8f0" font-size="10" text-anchor="middle" font-weight="600">P5</text>
+      <text x="500" y="222" fill="#94a3b8" font-size="9" text-anchor="middle">Medical Records</text>
+      <text x="500" y="234" fill="#94a3b8" font-size="9" text-anchor="middle">&amp; Consultation</text>
+      
+      <rect x="640" y="180" width="160" height="70" rx="8" fill="rgba(99,102,241,0.2)" stroke="#818cf8" stroke-width="1.5"/>
+      <text x="720" y="205" fill="#e2e8f0" font-size="10" text-anchor="middle" font-weight="600">P6</text>
+      <text x="720" y="222" fill="#94a3b8" font-size="9" text-anchor="middle">Lab Test</text>
+      <text x="720" y="234" fill="#94a3b8" font-size="9" text-anchor="middle">Management</text>
+      
+      <rect x="200" y="340" width="160" height="70" rx="8" fill="rgba(99,102,241,0.2)" stroke="#818cf8" stroke-width="1.5"/>
+      <text x="280" y="365" fill="#e2e8f0" font-size="10" text-anchor="middle" font-weight="600">P7</text>
+      <text x="280" y="382" fill="#94a3b8" font-size="9" text-anchor="middle">Notification</text>
+      <text x="280" y="394" fill="#94a3b8" font-size="9" text-anchor="middle">System</text>
+      
+      <rect x="420" y="340" width="160" height="70" rx="8" fill="rgba(99,102,241,0.2)" stroke="#818cf8" stroke-width="1.5"/>
+      <text x="500" y="365" fill="#e2e8f0" font-size="10" text-anchor="middle" font-weight="600">P8</text>
+      <text x="500" y="382" fill="#94a3b8" font-size="9" text-anchor="middle">Doctor Review</text>
+      <text x="500" y="394" fill="#94a3b8" font-size="9" text-anchor="middle">System</text>
+      
+      <rect x="640" y="340" width="160" height="70" rx="8" fill="rgba(99,102,241,0.2)" stroke="#818cf8" stroke-width="1.5"/>
+      <text x="720" y="365" fill="#e2e8f0" font-size="10" text-anchor="middle" font-weight="600">P9</text>
+      <text x="720" y="382" fill="#94a3b8" font-size="9" text-anchor="middle">Staff &amp; Schedule</text>
+      <text x="720" y="394" fill="#94a3b8" font-size="9" text-anchor="middle">Management</text>
+      
+      <!-- Data Stores -->
+      <rect x="150" y="500" width="180" height="60" rx="4" fill="rgba(76,29,149,0.25)" stroke="#a78bfa" stroke-width="1.5"/>
+      <text x="240" y="520" fill="#a78bfa" font-size="9" text-anchor="middle" font-weight="600">D1</text>
+      <text x="240" y="538" fill="#e2e8f0" font-size="9" text-anchor="middle">Users &amp; Profiles</text>
+      <text x="240" y="550" fill="#94a3b8" font-size="8" text-anchor="middle">MySQL Database</text>
+      
+      <rect x="410" y="500" width="180" height="60" rx="4" fill="rgba(76,29,149,0.25)" stroke="#a78bfa" stroke-width="1.5"/>
+      <text x="500" y="520" fill="#a78bfa" font-size="9" text-anchor="middle" font-weight="600">D2</text>
+      <text x="500" y="538" fill="#e2e8f0" font-size="9" text-anchor="middle">Appointments</text>
+      <text x="500" y="550" fill="#94a3b8" font-size="8" text-anchor="middle">MySQL Database</text>
+      
+      <rect x="670" y="500" width="180" height="60" rx="4" fill="rgba(76,29,149,0.25)" stroke="#a78bfa" stroke-width="1.5"/>
+      <text x="760" y="520" fill="#a78bfa" font-size="9" text-anchor="middle" font-weight="600">D3</text>
+      <text x="760" y="538" fill="#e2e8f0" font-size="9" text-anchor="middle">Medical Records</text>
+      <text x="760" y="550" fill="#94a3b8" font-size="8" text-anchor="middle">MySQL Database</text>
+      
+      <!-- Data Flows (simplified) -->
+      <defs>
+        <marker id="arr" markerWidth="6" markerHeight="4" refX="6" refY="2" orient="auto"><path d="M0,0 L6,2 L0,4" fill="#64748b"/></marker>
+      </defs>
+      
+      <!-- Patient flows -->
+      <path d="M130,80 L200,80" stroke="#22d3ee" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+      <path d="M280,110 L280,180" stroke="#64748b" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+      
+      <!-- Doctor flows -->
+      <path d="M130,570 L200,400" stroke="#34d399" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+      
+      <!-- Receptionist flows -->
+      <path d="M870,80 L720,110" stroke="#fbbf24" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+      <path d="M500,180 L500,110" stroke="#64748b" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+      
+      <!-- Admin flows -->
+      <path d="M870,570 L720,410" stroke="#fb7185" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+      <path d="M640,375 L580,375" stroke="#64748b" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+      
+      <!-- Data store connections -->
+      <path d="M280,250 L240,500" stroke="#a78bfa" stroke-width="1" fill="none" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+      <path d="M500,250 L500,500" stroke="#a78bfa" stroke-width="1" fill="none" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+      <path d="M720,250 L760,500" stroke="#a78bfa" stroke-width="1" fill="none" stroke-dasharray="4,3" marker-end="url(#arr)"/>
+    </svg>
+  </div>
+</div>
+</body>
+</html>

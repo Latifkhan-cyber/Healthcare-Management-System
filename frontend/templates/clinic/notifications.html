@@ -1,0 +1,119 @@
+{% extends 'base/base.html' %}
+{% block page_title %}Notifications{% endblock %}
+{% block page_subtitle %}You have {{ unread_count }} unread notification{{ unread_count|pluralize }}{% endblock %}
+
+{% block content %}
+<div class="data-card animate-fade-in-up">
+    <div class="data-card-header">
+        <h3>All Notifications</h3>
+        <div style="display: flex; gap: 8px; align-items: center;">
+            {% if unread_count > 0 %}
+            <form method="post" action="{% url 'clinic:mark_all_notifications_read' %}" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn-primary btn-sm" style="border: none; cursor: pointer;">
+                    <i class="fas fa-check-double"></i> Mark All Read
+                </button>
+            </form>
+            {% endif %}
+            {% if notifications %}
+            <form method="post" action="{% url 'clinic:clear_all_notifications' %}" style="display: inline;" onsubmit="return confirm('Clear all notifications? This cannot be undone.');">
+                {% csrf_token %}
+                <button type="submit" class="btn-danger btn-sm" style="border: none; cursor: pointer;">
+                    <i class="fas fa-trash"></i> Clear All
+                </button>
+            </form>
+            {% endif %}
+            <a href="{% url 'clinic:notification_preferences' %}" class="btn-secondary btn-sm" style="text-decoration: none;">
+                <i class="fas fa-cog"></i> Preferences
+            </a>
+        </div>
+    </div>
+
+    <!-- Real-time polling indicator -->
+    <div id="poll-indicator" style="padding: 4px 16px; font-size: 0.75rem; color: var(--gray-400); display: none;">
+        <i class="fas fa-circle-notch fa-spin"></i> New notifications available — <a href="#" onclick="location.reload(); return false;">Refresh</a>
+    </div>
+
+    {% for notif in notifications %}
+    <div class="notification-item" id="notif-{{ notif.id }}">
+        <div class="notif-left">
+            <div class="notif-icon {% if notif.is_read %}read{% else %}unread{% endif %}">
+                <i class="fas fa-bell"></i>
+            </div>
+            <div class="notif-content">
+                <div class="title {% if not notif.is_read %}unread{% endif %}">{{ notif.title }}</div>
+                <div class="message">{{ notif.message }}</div>
+                <div class="time">
+                    <i class="far fa-clock" style="margin-right: 3px;"></i>{{ notif.created_at|timesince }} ago
+                    <span style="margin-left: 8px; font-size: 0.7rem; color: var(--gray-400);">
+                        {{ notif.get_notification_type_display }}
+                        {% if notif.email_sent %}| <i class="fas fa-envelope" style="color: #0d9488;" title="Email sent"></i>{% endif %}
+                        {% if notif.sms_sent %}| <i class="fas fa-sms" style="color: #0d9488;" title="SMS sent"></i>{% endif %}
+                        {% if notif.delivery_error %}| <i class="fas fa-exclamation-triangle" style="color: #ef4444;" title="Delivery failed"></i>{% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div style="display: flex; gap: 8px; align-items: center;">
+            {% if notif.is_read %}
+                <span style="font-size: 0.75rem; color: var(--gray-400); display: flex; align-items: center; gap: 4px;">
+                    <i class="fas fa-check"></i> Read
+                </span>
+            {% else %}
+                <a href="{% url 'clinic:mark_notification_read' notif.id %}" class="btn-primary btn-sm" style="text-decoration: none;">
+                    <i class="fas fa-check"></i> Mark Read
+                </a>
+            {% endif %}
+            <form method="post" action="{% url 'clinic:delete_notification' notif.id %}" style="display: inline;" onsubmit="return confirm('Delete this notification?');">
+                {% csrf_token %}
+                <button type="submit" class="btn-danger btn-sm" style="border: none; cursor: pointer; padding: 4px 8px;">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+    {% empty %}
+    <div class="empty-state">
+        <div class="empty-icon"><i class="fas fa-bell-slash"></i></div>
+        <h4>No notifications yet</h4>
+        <p>Notifications will appear here when there's activity</p>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Pagination -->
+{% if page_obj.has_other_pages %}
+<div class="pagination" style="margin-top: 16px;">
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="page-link">&laquo; Previous</a>
+    {% endif %}
+    {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+            <span class="page-link active">{{ num }}</span>
+        {% else %}
+            <a href="?page={{ num }}" class="page-link">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="page-link">Next &raquo;</a>
+    {% endif %}
+</div>
+{% endif %}
+
+<!-- Real-time polling script -->
+<script>
+let lastPoll = null;
+function pollNotifications() {
+    fetch("{% url 'clinic:notifications_poll' %}")
+        .then(r => r.json())
+        .then(data => {
+            if (data.unread_count > 0) {
+                document.getElementById('poll-indicator').style.display = 'block';
+            }
+        })
+        .catch(() => {});
+}
+// Poll every 30 seconds
+setInterval(pollNotifications, 30000);
+</script>
+{% endblock %}

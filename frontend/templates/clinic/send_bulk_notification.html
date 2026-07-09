@@ -1,0 +1,63 @@
+{% extends 'base/base.html' %}
+{% block page_title %}Send Bulk Notification{% endblock %}
+{% block page_subtitle %}Send a notification to all patients{% endblock %}
+
+{% block content %}
+<div class="data-card animate-fade-in-up" style="max-width: 600px;">
+    <div class="data-card-header">
+        <h3><i class="fas fa-paper-plane" style="margin-right: 8px;"></i>Bulk Notification</h3>
+    </div>
+
+    <form method="post" style="padding: 0;">
+        {% csrf_token %}
+
+        <div style="padding: 12px 0;">
+            <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 6px;">Title</label>
+            <input type="text" name="title" required placeholder="e.g., Clinic Holiday Announcement"
+                   style="width: 100%; padding: 10px 14px; border: 1px solid var(--gray-300); border-radius: 8px; font-size: 0.9rem;">
+        </div>
+
+        <div style="padding: 12px 0;">
+            <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 6px;">Message</label>
+            <textarea name="message" required rows="4" placeholder="Enter the notification message..."
+                      style="width: 100%; padding: 10px 14px; border: 1px solid var(--gray-300); border-radius: 8px; font-size: 0.9rem; resize: vertical;"></textarea>
+        </div>
+
+        <div style="padding: 12px 0;">
+            <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 6px;">Notification Type</label>
+            <select name="notification_type" style="width: 100%; padding: 10px 14px; border: 1px solid var(--gray-300); border-radius: 8px; font-size: 0.9rem;">
+                <option value="GENERAL">General</option>
+                <option value="APPOINTMENT_REMINDER">Appointment Reminder</option>
+                <option value="FOLLOW_UP_DUE">Follow-Up Due</option>
+                <option value="LAB_RESULTS_READY">Lab Results Ready</option>
+            </select>
+        </div>
+
+        <div style="padding: 12px 0;">
+            <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 6px;">Recipients</label>
+            <select name="recipient_type" style="width: 100%; padding: 10px 14px; border: 1px solid var(--gray-300); border-radius: 8px; font-size: 0.9rem;">
+                <option value="all">All Patients</option>
+                <option value="with_appointments">Patients with Confirmed Appointments</option>
+            </select>
+        </div>
+
+        <div style="padding: 12px 0; border-top: 1px solid var(--gray-200); margin-top: 8px;">
+            <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 8px;">Delivery Channels</label>
+            <label style="display: flex; align-items: center; gap: 8px; padding: 4px 0; cursor: pointer;">
+                <input type="checkbox" name="send_email" checked style="width: 16px; height: 16px; accent-color: #0d9488;">
+                <span style="font-size: 0.9rem;">Send Email</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; padding: 4px 0; cursor: pointer;">
+                <input type="checkbox" name="send_sms" checked style="width: 16px; height: 16px; accent-color: #0d9488;">
+                <span style="font-size: 0.9rem;">Send SMS</span>
+            </label>
+        </div>
+
+        <div style="padding: 16px 0;">
+            <button type="submit" class="btn-primary" style="border: none; cursor: pointer; width: 100%;" onclick="return confirm('Send bulk notification to selected recipients?');">
+                <i class="fas fa-paper-plane"></i> Send Notification
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
